@@ -1,10 +1,7 @@
-package api.git.core.service.interview;
+package api.git.core.service.gitApiDemoTesting;
 
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.GistService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by andreapolcz on 6/15/17.

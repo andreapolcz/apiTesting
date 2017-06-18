@@ -1,8 +1,10 @@
-package api.git.core.service.interview;
+package api.git.core.service.gitApiDemoTesting;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.GistService;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,9 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,20 +40,20 @@ public class InterviewApplicationTests {
         setCredentials(config.getGitUserName(), config.getGitPassw0rd());
     }
 
+
     @Test
     public void shouldCreateAndDeleteUserGist() throws IOException {
         Gist gist;
-        List<Gist> userGists;
         gist = shouldCreateGist();
-        userGists = getAllGists(config.getGitUserName());
-        for (Gist currentGist : userGists) {
-            if (gist.getId().equals(currentGist.getId())) {
-                System.out.println("ITS HERE!");
-            }
-        }
-
         Gist userGist = getSingleGist(gist.getId());
+        assertNotNull(userGist);
         deleteWantedGist(gist.getId());
+        System.out.println("TEST");
+        try {
+            getSingleGist(gist.getId());
+        } catch (RequestException e) {
+            assertThat("Gist wasn't deleted. ", e.getMessage().contains("Not Found"), is(true));
+        }
     }
 
     private void setOauthService(String token) throws IOException {
